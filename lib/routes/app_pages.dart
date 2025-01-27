@@ -25,10 +25,10 @@ class AppPages {
       page: () => const ProfileScreen(),
       binding: ProfileBinding(),
     ),
-    GetPage(
-      name: Routes.editProfile,
-      page: () => const EditProfileScreen(),
-      binding: ProfileBinding(),
-    ),
+    // GetPage(
+    //   name: Routes.editProfile,
+    //   page: () => const EditProfileScreen(),
+    //   binding: ProfileBinding(),
+    // ),
   ];
 }

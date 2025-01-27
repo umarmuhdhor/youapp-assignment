@@ -7,7 +7,7 @@ class ProfileController extends GetxController {
   final _profile = Rxn<Profile>();
   final _isLoading = false.obs;
   final _errorMessage = RxnString();
-  
+
   Profile? get profile => _profile.value;
   bool get isLoading => _isLoading.value;
   String? get errorMessage => _errorMessage.value;
@@ -23,6 +23,7 @@ class ProfileController extends GetxController {
       _isLoading.value = true;
       _errorMessage.value = null;
       final response = await _apiService.getProfile();
+      print("response : ${response.name}");
       _profile.value = response;
     } catch (e) {
       _errorMessage.value = e.toString();

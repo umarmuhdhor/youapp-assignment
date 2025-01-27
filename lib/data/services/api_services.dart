@@ -15,8 +15,7 @@ class ApiService {
       onRequest: (options, handler) {
         final token = _storage.read('token');
         if (token != null) {
-          options.headers['x-access-token'] =
-              token;
+          options.headers['x-access-token'] = token;
         }
         return handler.next(options);
       },
@@ -49,7 +48,7 @@ class ApiService {
   Future<Profile> getProfile() async {
     try {
       final response = await _dio.get('/getProfile');
-      print("response : ${response.data}");
+      print(response);
       return Profile.fromJson(response.data);
     } on DioException catch (e) {
       throw _handleError(e);
