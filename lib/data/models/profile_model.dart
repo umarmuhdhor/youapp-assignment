@@ -20,7 +20,6 @@ class Profile {
   });
 
   factory Profile.fromJson(Map<String, dynamic> json) {
-    // Ambil data dari field "data" terlebih dahulu
     final data = json['data'] as Map<String, dynamic>;
     
     return Profile(
