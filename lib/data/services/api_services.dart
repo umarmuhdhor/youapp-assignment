@@ -57,7 +57,8 @@ class ApiService {
 
   Future<Profile> updateProfile(Map<String, dynamic> data) async {
     try {
-      final response = await _dio.put('/profile', data: data);
+      final response = await _dio.put('/updateProfile', data: data);
+      print('respose $response');
       return Profile.fromJson(response.data);
     } on DioException catch (e) {
       throw _handleError(e);

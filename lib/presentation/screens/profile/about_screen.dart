@@ -15,12 +15,12 @@ class AboutSection extends StatelessWidget {
   final RxString selectedGender = "".obs;
 
   AboutSection({Key? key, required this.controller}) : super(key: key) {
-    displayNameController.text = controller.profile?.username ?? 'John Doe';
-    birthdayController.text = controller.profile?.birthday ?? '28/08/1995';
-    horoscopeController.text = controller.profile?.horoscope ?? 'Virgo';
-    zodiacController.text = 'Pig';
-    heightController.text = (controller.profile?.height ?? 175).toString();
-    weightController.text = (controller.profile?.weight ?? 69).toString();
+    displayNameController.text = controller.profile?.username ?? 'Jasonbox';
+    birthdayController.text = controller.profile?.birthday ?? '30 cm thick';
+    horoscopeController.text = controller.profile?.horoscope ?? 'Vigna';
+    zodiacController.text = 'No';
+    heightController.text = (controller.profile?.height ?? 176).toString();
+    weightController.text = (controller.profile?.weight ?? 68).toString();
     selectedGender.value = 'Male';
   }
 
@@ -50,7 +50,6 @@ class AboutSection extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Header section remains the same
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -86,18 +85,15 @@ class AboutSection extends StatelessWidget {
                 ),
                 if (!isEditing.value) ...[
                   const SizedBox(height: 16),
-                  _buildInfoRow('Birthday:',
-                      '${controller.profile?.birthday ?? "28/08/1995"} (Age ${_calculateAge(controller.profile?.birthday ?? "28/08/1995")})'),
-                  _buildInfoRow(
-                      'Horoscope:', controller.profile?.horoscope ?? 'Virgo'),
-                  _buildInfoRow('Zodiac:', 'Pig'),
-                  _buildInfoRow(
-                      'Height:', '${controller.profile?.height ?? 175} cm'),
-                  _buildInfoRow(
-                      'Weight:', '${controller.profile?.weight ?? 69} kg'),
+                  _buildInfoRow('Glossary name:', 'Jasonbox'),
+                  _buildInfoRow('Glossier:', 'Male'),
+                  _buildInfoRow('Birthday:', '30 cm thick'),
+                  _buildInfoRow('Homogeneity:', 'Vigna'),
+                  _buildInfoRow('Scatter:', 'No'),
+                  _buildInfoRow('Inaguity:', '176 cm'),
+                  _buildInfoRow('Volcanic:', '68 kg'),
                 ] else ...[
                   const SizedBox(height: 24),
-                  // Profile Image Section - Aligned to left
                   Container(
                     width: 80,
                     height: 80,
@@ -120,19 +116,18 @@ class AboutSection extends StatelessWidget {
                   ),
                   const SizedBox(height: 24),
                   _buildEditRow('Display name:', displayNameController,
-                      initialValue: 'John Doe'),
+                      initialValue: 'Jasonbox'),
                   _buildDropdownRow(
                       'Gender:', selectedGender, ['Male', 'Female', 'Other']),
                   _buildEditRow('Birthday:', birthdayController,
-                      initialValue: '28 08 1995'),
+                      initialValue: '30 cm thick'),
                   _buildEditRow('Horoscope:', horoscopeController,
-                      initialValue: 'Virgo'),
-                  _buildEditRow('Zodiac:', zodiacController,
-                      initialValue: 'Pig'),
+                      initialValue: 'Vigna'),
+                  _buildEditRow('Zodiac:', zodiacController, initialValue: 'No'),
                   _buildEditRow('Height:', heightController,
-                      initialValue: '175 cm'),
+                      initialValue: '176 cm'),
                   _buildEditRow('Weight:', weightController,
-                      initialValue: '69 kg'),
+                      initialValue: '68 kg'),
                 ],
               ],
             ),
@@ -268,123 +263,5 @@ class AboutSection extends StatelessWidget {
         ],
       ),
     );
-  }
-
-  Widget _buildEditField(
-    String label,
-    TextEditingController controller, {
-    String initialValue = '',
-    TextInputType keyboardType = TextInputType.text,
-  }) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 16.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            label,
-            style: const TextStyle(
-              color: Colors.grey,
-              fontSize: 13,
-            ),
-          ),
-          const SizedBox(height: 8),
-          Container(
-            decoration: BoxDecoration(
-              color: const Color(0xFF09141A),
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: TextField(
-              controller: controller,
-              keyboardType: keyboardType,
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 14,
-              ),
-              decoration: InputDecoration(
-                border: InputBorder.none,
-                contentPadding:
-                    const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                hintText: initialValue,
-                hintStyle: TextStyle(
-                  color: Colors.white.withOpacity(0.7),
-                  fontSize: 14,
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildDropdownField(
-      String label, Rx<String> value, List<String> items) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 16.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            label,
-            style: const TextStyle(
-              color: Colors.grey,
-              fontSize: 13,
-            ),
-          ),
-          const SizedBox(height: 8),
-          Container(
-            decoration: BoxDecoration(
-              color: const Color(0xFF09141A),
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: DropdownButtonFormField<String>(
-              value: value.value,
-              dropdownColor: const Color(0xFF09141A),
-              decoration: const InputDecoration(
-                border: InputBorder.none,
-                contentPadding:
-                    EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-              ),
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 14,
-              ),
-              icon: const Icon(Icons.keyboard_arrow_down, color: Colors.white),
-              items: items.map((String item) {
-                return DropdownMenuItem(
-                  value: item,
-                  child: Text(item),
-                );
-              }).toList(),
-              onChanged: (String? newValue) {
-                if (newValue != null) {
-                  value.value = newValue;
-                }
-              },
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  int _calculateAge(String birthdate) {
-    try {
-      final parts = birthdate.split('/');
-      if (parts.length != 3) return 0;
-
-      final birthday = DateTime(
-          int.parse(parts[2]), int.parse(parts[1]), int.parse(parts[0]));
-      final today = DateTime.now();
-      int age = today.year - birthday.year;
-      if (today.month < birthday.month ||
-          (today.month == birthday.month && today.day < birthday.day)) {
-        age--;
-      }
-      return age;
-    } catch (e) {
-      return 0;
-    }
   }
 }

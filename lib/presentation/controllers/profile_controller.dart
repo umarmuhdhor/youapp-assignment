@@ -35,9 +35,13 @@ class ProfileController extends GetxController {
 
   Future<void> updateProfile(Map<String, dynamic> data) async {
     try {
+      print('1');
       _isLoading.value = true;
       _errorMessage.value = null;
+      print('1');
+
       final response = await _apiService.updateProfile(data);
+      print('2');
       _profile.value = response;
       Get.snackbar('Success', 'Profile updated successfully');
     } catch (e) {

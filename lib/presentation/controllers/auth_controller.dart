@@ -23,9 +23,17 @@ class AuthController extends GetxController {
       );
 
       final response = await _apiService.login(request);
-      Get.offAllNamed(Routes.profile);
+
+      if (response.accessToken != null) {
+        Get.offAllNamed(Routes.profile);
+      } else {
+        // Jika gagal, tampilkan pesan error
+        final errorBody = response.message;
+        _errorMessage.value = errorBody ?? 'Login failed';
+      }
     } catch (e) {
-      _errorMessage.value = e.toString();
+      // Tangani error lainnya (misalnya koneksi internet)
+      _errorMessage.value = 'Something went wrong. Please try again.';
     } finally {
       _isLoading.value = false;
     }
