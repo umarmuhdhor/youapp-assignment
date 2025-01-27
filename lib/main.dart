@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'screens/login_screen.dart';
+import 'package:youapp_assignment/routes/app_pages.dart';
+import 'package:youapp_assignment/routes/app_routes.dart';
 
 void main() {
   runApp(
