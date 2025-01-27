@@ -134,7 +134,7 @@ class LoginScreen extends GetView<AuthController> {
                                             false) {
                                           controller.login(
                                             _emailController.text,
-                                            _emailController.text, // username same as email for this example
+                                            _passwordController.text, // username same as email for this example
                                             _passwordController.text,
                                           );
                                         }

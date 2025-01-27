@@ -15,7 +15,8 @@ class ApiService {
       onRequest: (options, handler) {
         final token = _storage.read('token');
         if (token != null) {
-          options.headers['Authorization'] = 'Bearer $token';
+          options.headers['x-access-token'] =
+              token;
         }
         return handler.next(options);
       },
@@ -28,6 +29,7 @@ class ApiService {
       final authResponse = AuthResponse.fromJson(response.data);
       if (authResponse.accessToken != null) {
         await _storage.write('token', authResponse.accessToken);
+        print('Token saved: ${authResponse.accessToken}');
       }
       return authResponse;
     } on DioException catch (e) {
@@ -46,7 +48,8 @@ class ApiService {
 
   Future<Profile> getProfile() async {
     try {
-      final response = await _dio.get('/profile');
+      final response = await _dio.get('/getProfile');
+      print("response : ${response.data}");
       return Profile.fromJson(response.data);
     } on DioException catch (e) {
       throw _handleError(e);

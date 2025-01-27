@@ -44,7 +44,7 @@ class AuthController extends GetxController {
 
       await _apiService.register(request);
       Get.snackbar(
-        'Success', 
+        'Success',
         'Registration successful. Please login.',
         snackPosition: SnackPosition.BOTTOM,
       );
