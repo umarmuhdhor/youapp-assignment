@@ -8,181 +8,312 @@ class ProfileScreen extends GetView<ProfileController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: const Color(0xFF09141A),
       body: SafeArea(
         child: Obx(() {
           if (controller.isLoading) {
-            return const Center(
-                child: CircularProgressIndicator(color: Colors.white));
+            return const Center(child: CircularProgressIndicator(color: Colors.white));
           }
 
           final profile = controller.profile;
-          print(profile?.username);
 
-          return Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Header
-              Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Row(
-                      children: [
-                        IconButton(
-                          icon:
-                              const Icon(Icons.arrow_back, color: Colors.white),
-                          onPressed: () => Get.back(),
-                        ),
-                        const Text('Back',
-                            style: TextStyle(color: Colors.white)),
-                      ],
-                    ),
-                    Text(
-                      '@${profile?.username ?? ""}',
-                      style: const TextStyle(color: Colors.white, fontSize: 16),
-                    ),
-                    IconButton(
-                      icon: const Icon(Icons.more_vert, color: Colors.white),
-                      onPressed: () {},
-                    ),
-                  ],
-                ),
-              ),
-
-              // Username
-              Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-                child: Text(
-                  '@${profile?.username ?? ""}',
-                  style: const TextStyle(color: Colors.grey),
-                ),
-              ),
-
-              // About Section
-              Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Text(
-                          'About',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16,
+          return SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Header with username
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                        children: [
+                          GestureDetector(
+                            onTap: () => Get.back(),
+                            child: const Row(
+                              children: [
+                                Icon(
+                                  Icons.arrow_back,
+                                  color: Colors.white,
+                                  size: 24,
+                                ),
+                                SizedBox(width: 8),
+                                Text(
+                                  'Back',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 16,
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
+                        ],
+                      ),
+                      Text(
+                        '@${profile?.username ?? "johndoe"}123',
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 16,
                         ),
-                        IconButton(
-                          icon: const Icon(Icons.edit,
-                              color: Colors.grey, size: 20),
-                          onPressed: () {
-                            // Handle edit about
-                          },
-                        ),
-                      ],
-                    ),
-                    const Text(
-                      'Add in your your to help others know you better',
-                      style: TextStyle(color: Colors.grey, fontSize: 14),
-                    ),
-                    if (profile != null) ...[
-                      const SizedBox(height: 16),
-                      if (profile.name?.isNotEmpty ?? false)
-                        Text(
-                          'Name: ${profile.name}',
-                          style: const TextStyle(color: Colors.white),
-                        ),
-                      if (profile.birthday?.isNotEmpty ?? false)
-                        Text(
-                          'Birthday: ${profile.birthday}',
-                          style: const TextStyle(color: Colors.white),
-                        ),
-                      if (profile.horoscope != 'Error')
-                        Text(
-                          'Horoscope: ${profile.horoscope}',
-                          style: const TextStyle(color: Colors.white),
-                        ),
-                      if (profile.height != 0)
-                        Text(
-                          'Height: ${profile.height} cm',
-                          style: const TextStyle(color: Colors.white),
-                        ),
-                      if (profile.weight != 0)
-                        Text(
-                          'Weight: ${profile.weight} kg',
-                          style: const TextStyle(color: Colors.white),
-                        ),
-                    ],
-                  ],
-                ),
-              ),
-
-              // Interests Section
-              Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Text(
-                          'Interest',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16,
-                          ),
-                        ),
-                        IconButton(
-                          icon: const Icon(Icons.edit,
-                              color: Colors.grey, size: 20),
-                          onPressed: () {
-                            // Handle edit interests
-                          },
-                        ),
-                      ],
-                    ),
-                    const Text(
-                      'Add in your interest to find a better match',
-                      style: TextStyle(color: Colors.grey, fontSize: 14),
-                    ),
-                    if (profile?.interests?.isNotEmpty ?? false) ...[
-                      const SizedBox(height: 16),
-                      Wrap(
-                        spacing: 8,
-                        runSpacing: 8,
-                        children: profile!.interests!
-                            .map((interest) => Container(
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 12,
-                                    vertical: 6,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    color: Colors.grey[800],
-                                    borderRadius: BorderRadius.circular(20),
-                                  ),
-                                  child: Text(
-                                    interest,
-                                    style: const TextStyle(color: Colors.white),
-                                  ),
-                                ))
-                            .toList(),
                       ),
                     ],
-                  ],
+                  ),
                 ),
-              ),
-            ],
+
+                // Profile Card with Image
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: const Color(0xFF162329),
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    child: Column(
+                      children: [
+                        // Image Container
+                        Container(
+                          height: 200,
+                          width: double.infinity,
+                          decoration: const BoxDecoration(
+                            borderRadius: BorderRadius.vertical(
+                              top: Radius.circular(16),
+                              bottom:  Radius.circular(16),
+                            ),
+                            image: DecorationImage(
+                              image: NetworkImage('https://picsum.photos/800/600'),
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              borderRadius: const BorderRadius.vertical(
+                                top: Radius.circular(16),
+                              ),
+                              gradient: LinearGradient(
+                                begin: Alignment.topCenter,
+                                end: Alignment.bottomCenter,
+                                colors: [
+                                  Colors.transparent,
+                                  Colors.black.withOpacity(0.7),
+                                ],
+                              ),
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.all(16.0),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    '@${profile?.username ?? "johndoe"}, 28',
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 4),
+                                  const Text(
+                                    'Male',
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 14,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 8),
+                                  Row(
+                                    children: [
+                                      const Icon(Icons.star,
+                                          color: Colors.white, size: 16),
+                                      const SizedBox(width: 4),
+                                      Text(
+                                        profile?.horoscope ?? "Virgo",
+                                        style: const TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 14,
+                                        ),
+                                      ),
+                                      const SizedBox(width: 16),
+                                      const Icon(Icons.pets,
+                                          color: Colors.white, size: 16),
+                                      const SizedBox(width: 4),
+                                      const Text(
+                                        'Pig',
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 14,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+
+                const SizedBox(height: 16),
+
+                // About Section
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: const Color(0xFF162329),
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              const Text(
+                                'About',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                              GestureDetector(
+                                onTap: () {
+                                  // Handle edit
+                                },
+                                child: const Icon(
+                                  Icons.edit,
+                                  color: Colors.white,
+                                  size: 18,
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 16),
+                          _buildInfoRow(
+                            'Birthday:',
+                            '${profile?.birthday ?? "25/08/1995"} (Age ${_calculateAge(profile?.birthday ?? "25/08/1995")})',
+                          ),
+                          _buildInfoRow('Horoscope:', profile?.horoscope ?? 'Virgo'),
+                          _buildInfoRow('Zodiac:', 'Pig'),
+                          _buildInfoRow('Height:', '${profile?.height ?? 175} cm'),
+                          _buildInfoRow('Weight:', '${profile?.weight ?? 69} kg'),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+
+                const SizedBox(height: 16),
+
+                // Interest Section
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: const Color(0xFF162329),
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              const Text(
+                                'Interest',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                              GestureDetector(
+                                onTap: () {
+                                  // Handle edit
+                                },
+                                child: const Icon(
+                                  Icons.edit,
+                                  color: Colors.white,
+                                  size: 18,
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 8),
+                          const Text(
+                            'Add in your interest to find a better match',
+                            style: TextStyle(
+                              color: Colors.grey,
+                              fontSize: 14,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
           );
         }),
       ),
     );
+  }
+
+  Widget _buildInfoRow(String label, String value) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8.0),
+      child: Row(
+        children: [
+          Text(
+            label,
+            style: const TextStyle(
+              color: Colors.grey,
+              fontSize: 14,
+            ),
+          ),
+          const SizedBox(width: 4),
+          Text(
+            value,
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 14,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  int _calculateAge(String birthdate) {
+    try {
+      final parts = birthdate.split('/');
+      if (parts.length != 3) return 0;
+      
+      final birthday = DateTime(
+        int.parse(parts[2]), 
+        int.parse(parts[1]), 
+        int.parse(parts[0])
+      );
+      final today = DateTime.now();
+      int age = today.year - birthday.year;
+      if (today.month < birthday.month || 
+          (today.month == birthday.month && today.day < birthday.day)) {
+        age--;
+      }
+      return age;
+    } catch (e) {
+      return 0;
+    }
   }
 }
