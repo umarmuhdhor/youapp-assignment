@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:youapp_assignment/presentation/controllers/profile_controller.dart';
+import 'package:youapp_assignment/presentation/screens/profile/about.dart';
+import 'package:youapp_assignment/presentation/screens/profile/edit_profile_screen.dart';
 
 class ProfileScreen extends GetView<ProfileController> {
   const ProfileScreen({Key? key}) : super(key: key);
@@ -12,7 +14,8 @@ class ProfileScreen extends GetView<ProfileController> {
       body: SafeArea(
         child: Obx(() {
           if (controller.isLoading) {
-            return const Center(child: CircularProgressIndicator(color: Colors.white));
+            return const Center(
+                child: CircularProgressIndicator(color: Colors.white));
           }
 
           final profile = controller.profile;
@@ -79,10 +82,11 @@ class ProfileScreen extends GetView<ProfileController> {
                           decoration: const BoxDecoration(
                             borderRadius: BorderRadius.vertical(
                               top: Radius.circular(16),
-                              bottom:  Radius.circular(16),
+                              bottom: Radius.circular(16),
                             ),
                             image: DecorationImage(
-                              image: NetworkImage('https://picsum.photos/800/600'),
+                              image:
+                                  NetworkImage('https://picsum.photos/800/600'),
                               fit: BoxFit.cover,
                             ),
                           ),
@@ -159,58 +163,11 @@ class ProfileScreen extends GetView<ProfileController> {
                 ),
 
                 const SizedBox(height: 16),
-
-                // About Section
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: const Color(0xFF162329),
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              const Text(
-                                'About',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                              GestureDetector(
-                                onTap: () {
-                                  // Handle edit
-                                },
-                                child: const Icon(
-                                  Icons.edit,
-                                  color: Colors.white,
-                                  size: 18,
-                                ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 16),
-                          _buildInfoRow(
-                            'Birthday:',
-                            '${profile?.birthday ?? "25/08/1995"} (Age ${_calculateAge(profile?.birthday ?? "25/08/1995")})',
-                          ),
-                          _buildInfoRow('Horoscope:', profile?.horoscope ?? 'Virgo'),
-                          _buildInfoRow('Zodiac:', 'Pig'),
-                          _buildInfoRow('Height:', '${profile?.height ?? 175} cm'),
-                          _buildInfoRow('Weight:', '${profile?.weight ?? 69} kg'),
-                        ],
-                      ),
-                    ),
-                  ),
+                  child: AboutSection(controller: controller),
                 ),
-
+ 
                 const SizedBox(height: 16),
 
                 // Interest Section
@@ -299,15 +256,12 @@ class ProfileScreen extends GetView<ProfileController> {
     try {
       final parts = birthdate.split('/');
       if (parts.length != 3) return 0;
-      
+
       final birthday = DateTime(
-        int.parse(parts[2]), 
-        int.parse(parts[1]), 
-        int.parse(parts[0])
-      );
+          int.parse(parts[2]), int.parse(parts[1]), int.parse(parts[0]));
       final today = DateTime.now();
       int age = today.year - birthday.year;
-      if (today.month < birthday.month || 
+      if (today.month < birthday.month ||
           (today.month == birthday.month && today.day < birthday.day)) {
         age--;
       }
