@@ -23,7 +23,6 @@ class ProfileController extends GetxController {
       _isLoading.value = true;
       _errorMessage.value = null;
       final response = await _apiService.getProfile();
-      print("response : ${response.name}");
       _profile.value = response;
     } catch (e) {
       _errorMessage.value = e.toString();
@@ -39,8 +38,8 @@ class ProfileController extends GetxController {
       _errorMessage.value = null;
 
       final response = await _apiService.updateProfile(data);
-      print(response);
       _profile.value = response;
+      
       Get.snackbar('Success', 'Profile updated successfully');
     } catch (e) {
       _errorMessage.value = e.toString();

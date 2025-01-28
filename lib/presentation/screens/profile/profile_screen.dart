@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:youapp_assignment/presentation/controllers/profile_controller.dart';
 import 'package:youapp_assignment/presentation/screens/profile/about_screen.dart';
-import 'package:youapp_assignment/presentation/screens/profile/edit_profile_screen.dart';
 import 'package:youapp_assignment/presentation/screens/profile/interest_screen.dart';
 
 class ProfileScreen extends GetView<ProfileController> {
@@ -25,7 +24,6 @@ class ProfileScreen extends GetView<ProfileController> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Header with username
                 Padding(
                   padding: const EdgeInsets.all(16.0),
                   child: Row(
@@ -56,7 +54,7 @@ class ProfileScreen extends GetView<ProfileController> {
                         ],
                       ),
                       Text(
-                        '@${profile?.username ?? "Jasonbox"}123',
+                        '@${profile?.username ?? ""}',
                         style: const TextStyle(
                           color: Colors.white,
                           fontSize: 16,
@@ -146,6 +144,8 @@ class ProfileScreen extends GetView<ProfileController> {
                 const SizedBox(height: 16),
 
                 // Interest Section
+                // Inside ProfileScreen's build method, replace the Interest section with:
+
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16.0),
                   child: Container(
@@ -169,7 +169,6 @@ class ProfileScreen extends GetView<ProfileController> {
                                   fontWeight: FontWeight.w600,
                                 ),
                               ),
-                              // Inside ProfileScreen's build method
                               GestureDetector(
                                 onTap: () =>
                                     Get.to(() => const InterestScreen()),
@@ -181,14 +180,39 @@ class ProfileScreen extends GetView<ProfileController> {
                               ),
                             ],
                           ),
-                          const SizedBox(height: 8),
-                          const Text(
-                            'Add in your interest to find a better match',
-                            style: TextStyle(
-                              color: Colors.grey,
-                              fontSize: 14,
+                          const SizedBox(height: 12),
+                          if (profile?.interests == null ||
+                              profile!.interests!.isEmpty)
+                            const Text(
+                              'Add in your interest to find a better match',
+                              style: TextStyle(
+                                color: Colors.grey,
+                                fontSize: 14,
+                              ),
+                            )
+                          else
+                            Wrap(
+                              spacing: 8.0, // gap between adjacent chips
+                              runSpacing: 8.0, // gap between lines
+                              children: profile!.interests!
+                                  .map((interest) => Container(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 16, vertical: 8),
+                                        decoration: BoxDecoration(
+                                          color: const Color(0xFF1F2A30),
+                                          borderRadius:
+                                              BorderRadius.circular(100),
+                                        ),
+                                        child: Text(
+                                          interest,
+                                          style: const TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 14,
+                                          ),
+                                        ),
+                                      ))
+                                  .toList(),
                             ),
-                          ),
                         ],
                       ),
                     ),

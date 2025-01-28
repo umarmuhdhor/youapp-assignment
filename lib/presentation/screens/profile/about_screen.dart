@@ -13,28 +13,40 @@ class AboutSection extends StatelessWidget {
   final TextEditingController heightController = TextEditingController();
   final TextEditingController weightController = TextEditingController();
   final RxString selectedGender = "".obs;
+  final RxString imageUrl = "".obs;
 
   AboutSection({Key? key, required this.controller}) : super(key: key) {
-    displayNameController.text = controller.profile?.username ?? 'Jasonbox';
-    birthdayController.text = controller.profile?.birthday ?? '30 cm thick';
-    horoscopeController.text = controller.profile?.horoscope ?? 'Vigna';
-    zodiacController.text = 'No';
-    heightController.text = (controller.profile?.height ?? 176).toString();
-    weightController.text = (controller.profile?.weight ?? 68).toString();
-    selectedGender.value = 'Male';
+    displayNameController.text = controller.profile?.name ?? '';
+    birthdayController.text = controller.profile?.birthday ?? '';
+    horoscopeController.text = controller.profile?.horoscope ?? '';
+    heightController.text = controller.profile?.height != null && controller.profile!.height != 0
+        ? controller.profile!.height.toString()
+        : '';
+    weightController.text = controller.profile?.weight != null && controller.profile!.weight != 0
+        ? controller.profile!.weight.toString()
+        : '';
+    selectedGender.value = controller.profile?.gender ?? '';
+    // imageUrl.value = controller.profile?.imageUrl ?? '';
   }
 
-  void _updateProfile() {
+  void _updateProfile() async {
     final updatedProfile = Profile(
-      username: displayNameController.text,
+      name: displayNameController.text,
       birthday: birthdayController.text,
       horoscope: horoscopeController.text,
       height: int.tryParse(heightController.text) ?? 0,
       weight: int.tryParse(weightController.text) ?? 0,
+      gender: selectedGender.value,
+      // imageUrl: imageUrl.value,
     );
 
-    controller.updateProfile(updatedProfile as Map<String, dynamic>);
-    isEditing.value = false;
+    try {
+      await controller.updateProfile(updatedProfile.toJson());
+      isEditing.value = false;
+      Get.snackbar('Success', 'Profile updated successfully');
+    } catch (e) {
+      Get.snackbar('Error', e.toString());
+    }
   }
 
   @override
@@ -85,25 +97,26 @@ class AboutSection extends StatelessWidget {
                 ),
                 if (!isEditing.value) ...[
                   const SizedBox(height: 16),
-                  _buildInfoRow('Glossary name:', 'Jasonbox'),
-                  _buildInfoRow('Glossier:', 'Male'),
-                  _buildInfoRow('Birthday:', '30 cm thick'),
-                  _buildInfoRow('Homogeneity:', 'Vigna'),
-                  _buildInfoRow('Scatter:', 'No'),
-                  _buildInfoRow('Inaguity:', '176 cm'),
-                  _buildInfoRow('Volcanic:', '68 kg'),
+                  _buildInfoRow('Display name:', controller.profile?.name ?? ''),
+                  _buildInfoRow('Gender:', controller.profile?.gender ?? ''),
+                  _buildInfoRow('Birthday:', controller.profile?.birthday ?? ''),
+                  _buildInfoRow('Horoscope:', controller.profile?.horoscope ?? ''),
+                  _buildInfoRow('Height:', controller.profile?.height != null && controller.profile!.height != 0
+                      ? '${controller.profile!.height} cm'
+                      : ''),
+                  _buildInfoRow('Weight:', controller.profile?.weight != null && controller.profile!.weight != 0
+                      ? '${controller.profile!.weight} kg'
+                      : ''),
                 ] else ...[
                   const SizedBox(height: 24),
-                  Container(
-                    width: 80,
-                    height: 80,
-                    decoration: BoxDecoration(
-                      color: const Color(0xFF09141A),
-                      borderRadius: BorderRadius.circular(40),
-                      image: const DecorationImage(
-                        image: AssetImage('assets/images/default_profile.png'),
-                        fit: BoxFit.cover,
-                      ),
+                  GestureDetector(
+                    onTap: () async {
+                    },
+                    child: CircleAvatar(
+                      radius: 40,
+                      backgroundImage: imageUrl.value.isNotEmpty
+                          ? NetworkImage(imageUrl.value)
+                          : AssetImage('assets/images/default_profile.png') as ImageProvider,
                     ),
                   ),
                   const SizedBox(height: 8),
@@ -116,18 +129,19 @@ class AboutSection extends StatelessWidget {
                   ),
                   const SizedBox(height: 24),
                   _buildEditRow('Display name:', displayNameController,
-                      initialValue: 'Jasonbox'),
+                      hintText: 'Enter name'),
                   _buildDropdownRow(
                       'Gender:', selectedGender, ['Male', 'Female', 'Other']),
                   _buildEditRow('Birthday:', birthdayController,
-                      initialValue: '30 cm thick'),
+                      hintText: 'DD MM YYYY'),
                   _buildEditRow('Horoscope:', horoscopeController,
-                      initialValue: 'Vigna'),
-                  _buildEditRow('Zodiac:', zodiacController, initialValue: 'No'),
+                      hintText: 'Enter horoscope'),
+                  _buildEditRow('Zodiac:', zodiacController,
+                      hintText: 'Enter zodiac'),
                   _buildEditRow('Height:', heightController,
-                      initialValue: '176 cm'),
+                      hintText: 'Add height', keyboardType: TextInputType.number),
                   _buildEditRow('Weight:', weightController,
-                      initialValue: '68 kg'),
+                      hintText: 'Add weight', keyboardType: TextInputType.number),
                 ],
               ],
             ),
@@ -138,7 +152,7 @@ class AboutSection extends StatelessWidget {
   Widget _buildEditRow(
     String label,
     TextEditingController controller, {
-    String initialValue = '',
+    String hintText = '',
     TextInputType keyboardType = TextInputType.text,
   }) {
     return Padding(
@@ -172,7 +186,7 @@ class AboutSection extends StatelessWidget {
                   border: InputBorder.none,
                   contentPadding:
                       const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                  hintText: initialValue,
+                  hintText: hintText,
                   hintStyle: TextStyle(
                     color: Colors.white.withOpacity(0.7),
                     fontSize: 14,
@@ -208,7 +222,7 @@ class AboutSection extends StatelessWidget {
                 borderRadius: BorderRadius.circular(8),
               ),
               child: DropdownButtonFormField<String>(
-                value: value.value,
+                value: value.value.isNotEmpty ? value.value : null,
                 dropdownColor: const Color(0xFF09141A),
                 decoration: const InputDecoration(
                   border: InputBorder.none,
@@ -245,16 +259,19 @@ class AboutSection extends StatelessWidget {
       padding: const EdgeInsets.only(bottom: 8.0),
       child: Row(
         children: [
-          Text(
-            label,
-            style: const TextStyle(
-              color: Colors.grey,
-              fontSize: 14,
+          SizedBox(
+            width: 100,
+            child: Text(
+              label,
+              style: const TextStyle(
+                color: Colors.grey,
+                fontSize: 14,
+              ),
             ),
           ),
           const SizedBox(width: 4),
           Text(
-            value,
+            value.isNotEmpty ? value : '-',
             style: const TextStyle(
               color: Colors.white,
               fontSize: 14,

@@ -48,7 +48,16 @@ class ApiService {
   Future<Profile> getProfile() async {
     try {
       final response = await _dio.get('/getProfile');
-      print(response);
+      return Profile.fromJson(response.data);
+    } on DioException catch (e) {
+      throw _handleError(e);
+    }
+  }
+
+  Future<Profile> updateProfileInterest(Map<String, dynamic> data) async {
+    try {
+      final response = await _dio.put('/updateProfile', data: data);
+      print('respose $response');
       return Profile.fromJson(response.data);
     } on DioException catch (e) {
       throw _handleError(e);
@@ -57,10 +66,26 @@ class ApiService {
 
   Future<Profile> updateProfile(Map<String, dynamic> data) async {
     try {
+      print('ApiService - Updating profile with data: $data'); // Debug print
+
       final response = await _dio.put('/updateProfile', data: data);
-      print('respose $response');
-      return Profile.fromJson(response.data);
+      print('ApiService - Raw response: ${response.data}'); // Debug print
+
+      if (response.data['message'] != null) {
+        print('Update success message: ${response.data['message']}');
+      }
+
+      // Jika response memiliki data key, gunakan itu
+      if (response.data['data'] != null) {
+        return Profile.fromJson(response.data);
+      }
+
+      // Fallback ke response langsung jika tidak ada data key
+      return Profile.fromJson({'data': response.data});
     } on DioException catch (e) {
+      print('ApiService - Error updating profile:');
+      print('Status code: ${e.response?.statusCode}');
+      print('Error data: ${e.response?.data}');
       throw _handleError(e);
     }
   }
